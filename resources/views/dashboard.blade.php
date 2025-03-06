@@ -18,4 +18,7 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+
+    @include('partials.statistics')
+
+    </x-app-layout>
