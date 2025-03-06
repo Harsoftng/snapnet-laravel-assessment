@@ -4,8 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
+use App\UserRole;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -15,7 +22,7 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
         if (\Auth::user()->isAdmin()) {
-            $projects = Project::paginate(10);
+            $projects = Project::orderBy('created_at', 'desc')->paginate(10);
         }else{
             $projects = $request->user()->projects()->paginate(10);
         }
@@ -30,7 +37,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        return view('projects.create');
     }
 
     /**
@@ -38,7 +45,16 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => ['required', 'string', 'max:250'],
+        ]);
+
+        $uproject = Project::create([
+            'title' => $request->title,
+            'user_id' => (Auth::user())->id,
+        ]);
+
+        return redirect(route('project.index', absolute: false));
     }
 
     /**
