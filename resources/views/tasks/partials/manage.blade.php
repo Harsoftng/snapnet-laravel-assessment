@@ -70,7 +70,7 @@
                             @empty
                                 <div class="table-row">
                                     <div class="table-cell border-b p-2">
-                                        No projects found <a href="{{route('project.create')}}">add new project</a>
+                                        No tasks found <a href="{{route('tasks.create', ['id' => $project])}}">add new project</a>
                                     </div>
                                 </div>
                             @endforelse

@@ -5,6 +5,6 @@
         </h2>
     </x-slot>
 
-    @include('projects.partials.manage',['projects' => $projects])
+    @include('projects.partials.edit-form',['project' => $project])
 
 </x-app-layout>

@@ -62,7 +62,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project, Request $request)
     {
-        Gate::authorize('update', $project);
+        Gate::authorize('show', $project);
 
         $tasks = Task::whereProjectId($project->id)->get();
 
@@ -75,17 +75,35 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Project $project, Request $request)
     {
-        //
+        Gate::authorize('edit', $project);
+        return view('projects.edit', [
+            'project' => $project
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+
+
+        $request->validate([
+            'id' => ['required', 'exists:projects,id'],
+            'title' => ['required', 'string', 'max:250'],
+        ]);
+
+        $project = Project::findOrFail($request->id);
+
+        Gate::authorize('edit', $project);
+
+        $project->update([
+            'title' => $request->title,
+        ]);
+
+        return redirect(route('project.index', absolute: false));
     }
 
     /**
