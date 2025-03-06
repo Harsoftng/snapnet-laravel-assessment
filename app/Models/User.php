@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\UserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -11,6 +12,8 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    public const DEFAULT_USER_EMAIL = 'snapnet@example.com';
 
     /**
      * The attributes that are mass assignable.
@@ -48,8 +51,18 @@ class User extends Authenticatable
         ];
     }
 
-    protected function isAdmin(): bool
+    public function isAdmin(): bool
     {
         return $this->role == UserRole::Admin->value;
+    }
+
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
     }
 }
